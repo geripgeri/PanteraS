@@ -44,7 +44,7 @@ ENV SUPERVISORD_APP_VERSION       3.3.3
 ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
 ENV CONSUL_APP_VERSION            1.0.6
 ENV CONSUL_TEMPLATE_APP_VERSION   0.18.2
-ENV HAPROXY_APP_VERSION           1.6.14-1ppa1~xenial
+ENV HAPROXY_APP_VERSION           1.8.9-2ppa1~xenial
 ENV MESOS_APP_VERSION             1.5.0-2.0.1
 ENV MARATHON_APP_VERSION          1.6.322
 ENV REGISTRATOR_APP_VERSION       v7
@@ -87,7 +87,7 @@ RUN mkdir /opt/consul-template
 ENV PATH $PATH:/opt/consul-template
 WORKDIR /opt/consul-template
 
-RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.6/ubuntu xenial main' > /etc/apt/sources.list.d/haproxy.list \
+RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.8/ubuntu xenial main' > /etc/apt/sources.list.d/haproxy.list \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 1C61B9CD \
     && apt-get update \
     && apt-get install -y \
