@@ -88,7 +88,6 @@ FQDN=${FQDN:-"`hostname -f`"}
 FQDN=${FQDN:-${HOSTNAME}}
 
 # Memory settings
-MARATHON_JAVA_OPTS=${MARATHON_JAVA_OPTS:-"-Xmx512m"}
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
 CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 
@@ -151,7 +150,6 @@ DNSMASQ_PARAMS="-d \
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
- --no-logger \
  --http_address ${LISTEN_IP} \
  --https_address ${LISTEN_IP} \
  ${MARATHON_PARAMS}"

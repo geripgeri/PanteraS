@@ -52,7 +52,6 @@ ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
 ENV FABIO_APP_VERSION             1.5.8
 ENV FABIO_GO_APP_VERSION          go1.10
 ENV NETDATA_APP_VERSION           1.9.0
-ENV MARATHON_LDAP_VERSION         1.3
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -133,13 +132,6 @@ RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources
     && rm -rf /var/lib/apt/lists/* \
     && rm /etc/mesos/zk
 ADD zkStart.sh /opt/zkStart.sh
-ADD marathon.default /etc/default/marathon
-
-# MARATHON PLUGINS
-#
-RUN mkdir -p /opt/marathon/plugins/
-WORKDIR /opt/marathon/plugins/
-RUN wget https://github.com/ContainX/marathon-ldap/releases/download/${MARATHON_LDAP_VERSION}/marathon-ldap.jar
 
 # DOCKER
 #
