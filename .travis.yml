@@ -4,11 +4,7 @@ sudo: required
 services: docker 
 
 env:
-  global:
-    - DOCKER_APP_VERSION=17.05.0~ce-0~ubuntu-trusty
-
-notifications:
-  slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
+  - DOCKER_APP_VERSION=17.05.0~ce-0~ubuntu-trusty
 
 before_install:
   - echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /tmp/docker.list
@@ -25,7 +21,7 @@ before_install:
   - docker pull ubuntu:16.04
   - docker ps
   - ./build-docker-image.sh
-  - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
+  - if [ ! -f /tmp/ipaddress.txt ]; then export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}'); else export IP=$(cat /tmp/ipaddress.txt); fi
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
