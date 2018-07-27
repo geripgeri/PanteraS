@@ -98,10 +98,6 @@ CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
-# enable keepalived if the consul_template(with HAproxy) gets started and a
-# virtual IP address is specified
-[ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
-    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
 # Expose ports depends on which service has been mark to start
 [ "${START_CONSUL_TEMPLATE}" == "true" ] || [ "${START_FABIO}" == "true" ] && {
@@ -134,8 +130,7 @@ CONSUL_PARAMS="agent \
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
  -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
  -consul-retry \
- -max-stale=0 \
- ${KEEPALIVED_CONSUL_TEMPLATE}"
+ -max-stale=0"
 #
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \

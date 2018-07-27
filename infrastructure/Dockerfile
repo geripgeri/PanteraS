@@ -33,7 +33,6 @@ RUN apt-get update \
        git \
        lolcat \
        toilet \
-       keepalived \
        iptables \
        libapparmor1 \
        jshon \
@@ -94,9 +93,7 @@ RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.8/ubuntu xenial main' >
        haproxy=${HAPROXY_APP_VERSION} \
     && apt-get clean \
     && sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a \
-    && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
+    && rm -rf /var/lib/apt/lists/* 
 
 # consul-template
 RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
@@ -114,10 +111,6 @@ ADD haproxy_reload.sh  /opt/consul-template/
 ADD consul-template.sh /opt/consul-template/
 ADD consul_config.json /etc/consul.d/
 
-# KEEPALIVED config
-#
-ADD keepalived.conf.ctmpl /opt/consul-template/
-ADD keepalived_reload.sh  /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
