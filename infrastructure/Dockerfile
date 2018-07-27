@@ -48,8 +48,6 @@ ENV MESOS_APP_VERSION             1.5.0-2.0.1
 ENV MARATHON_APP_VERSION          1.6.322
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
-ENV FABIO_APP_VERSION             1.5.8
-ENV FABIO_GO_APP_VERSION          go1.10
 ENV NETDATA_APP_VERSION           1.9.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -144,17 +142,6 @@ WORKDIR /opt/registrator
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz \
     && rm registrator.tgz
-
-# FABIO
-#
-RUN mkdir /opt/fabio
-ENV PATH ${PATH}:/opt/fabio
-WORKDIR /opt/fabio
-ADD fabio.properties /opt/fabio/fabio.properties
-RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 \
-    && chmod a+x fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 \
-    && ln -s fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 fabio
-
 
 # NETDATA
 #
