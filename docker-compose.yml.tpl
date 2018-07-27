@@ -9,7 +9,6 @@ panteras:
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
      ${CHRONOS_PORTS}
-     ${NETDATA_PORTS}
   
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
@@ -33,9 +32,6 @@ panteras:
     SERVICE_4400_NAME: chronos
     SERVICE_4400_TAGS: haproxy,urlprefix-chronos.service.consul/
     SERVICE_4400_CHECK_HTTP: /ping
-
-    SERVICE_19999_NAME: netdata
-    SERVICE_19999_TAGS: haproxy,urlprefix-netdata.service.consul/
     SERVICE_19999_CHECK_HTTP: /version.txt
 
     START_CONSUL:            "${START_CONSUL}"
@@ -47,7 +43,6 @@ panteras:
     START_REGISTRATOR:       "${START_REGISTRATOR}"
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
     START_CHRONOS:           "${START_CHRONOS}"
-    START_NETDATA:           "${START_NETDATA}"
 
     HAPROXY_SSL:             "${HAPROXY_SSL}"
     
@@ -68,7 +63,6 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
     CHRONOS_APP_PARAMS:         "${CHRONOS_APP_PARAMS}"
     JAVA_OPTS:                  "${CHRONOS_JAVA_OPTS}"
-    NETDATA_APP_PARAMS:         "${NETDATA_APP_PARAMS}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 

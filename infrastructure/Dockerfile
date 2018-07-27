@@ -48,7 +48,6 @@ ENV MESOS_APP_VERSION             1.5.0-2.0.1
 ENV MARATHON_APP_VERSION          1.6.322
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
-ENV NETDATA_APP_VERSION           1.9.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -141,40 +140,7 @@ WORKDIR /opt/registrator
 # Providing binaries by us
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz \
-    && rm registrator.tgz
-
-# NETDATA
-#
-RUN apt-get update \
-    && apt-get -y install \
-       zlib1g-dev \
-       gcc \
-       make \
-       autoconf \
-       autogen \
-       automake \
-       pkg-config \
-       uuid-dev \
-       libmnl-dev \
-    && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
-    && cd /tmp/netdata.git \
-    && ./netdata-installer.sh --dont-wait --install /opt \
-    && cd /opt \
-    && rm -rf /tmp/* \
-    && ln -sf /dev/stdout /opt/netdata/var/log/netdata/access.log \
-    && ln -sf /dev/stderr /opt/netdata/var/log/netdata/error.log \
-    && apt-get -y remove \
-       zlib1g-dev \
-       gcc \
-       make \
-       autoconf \
-       autogen \
-       automake \
-       pkg-config \
-       uuid-dev \
-       libmnl-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
+    && rm registrator.tgz \
     && rm -rf /var/lib/apt/lists/*
 
 # PanteraS:
