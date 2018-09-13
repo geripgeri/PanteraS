@@ -50,12 +50,8 @@ START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
 START_CHRONOS=${START_CHRONOS:-${MASTER}}
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
-#FABIO experimental
-START_FABIO=${START_FABIO:-"false"}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
 START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
-#NETDATA experimental
-START_NETDATA=${START_NETDATA:-"false"}
 #OPTIONAL
 START_DNSMASQ=${START_DNSMASQ:-"true"}
 #HAPROXY SSL
@@ -98,18 +94,13 @@ CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
-# enable keepalived if the consul_template(with HAproxy) gets started and a
-# virtual IP address is specified
-[ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
-    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
 # Expose ports depends on which service has been mark to start
-[ "${START_CONSUL_TEMPLATE}" == "true" ] || [ "${START_FABIO}" == "true" ] && {
+[ "${START_CONSUL_TEMPLATE}" == "true" ]  && {
   [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
   [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
   [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
   [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
-  [ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
 }
 
 # Override docker with local binary
@@ -134,8 +125,7 @@ CONSUL_PARAMS="agent \
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
  -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
  -consul-retry \
- -max-stale=0 \
- ${KEEPALIVED_CONSUL_TEMPLATE}"
+ -max-stale=0"
 #
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \
@@ -185,9 +175,6 @@ CHRONOS_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --http_port 4400 \
  ${CHRONOS_PARAMS}"
 #
-FABIO_PARAMS="-cfg ./fabio.properties"
-#
-NETDATA_PARAMS="-nd -ch /host"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
@@ -198,8 +185,6 @@ MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 CHRONOS_APP_PARAMS=${CHRONOS_APP_PARAMS:-$CHRONOS_PARAMS}
-FABIO_APP_PARAMS=${FABIO_APP_PARAMS:-$FABIO_PARAMS}
-NETDATA_APP_PARAMS=${NETDATA_APP_PARAMS:-$NETDATA_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}

@@ -33,7 +33,6 @@ RUN apt-get update \
        git \
        lolcat \
        toilet \
-       keepalived \
        iptables \
        libapparmor1 \
        jshon \
@@ -44,14 +43,11 @@ ENV SUPERVISORD_APP_VERSION       3.3.3
 ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
 ENV CONSUL_APP_VERSION            1.0.6
 ENV CONSUL_TEMPLATE_APP_VERSION   0.18.2
-ENV HAPROXY_APP_VERSION           1.8.12-1ppa1~xenial 
+ENV HAPROXY_APP_VERSION           1.8.13-1ppa1~xenial 
 ENV MESOS_APP_VERSION             1.5.0-2.0.1
 ENV MARATHON_APP_VERSION          1.6.322
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
-ENV FABIO_APP_VERSION             1.5.8
-ENV FABIO_GO_APP_VERSION          go1.10
-ENV NETDATA_APP_VERSION           1.9.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -94,9 +90,7 @@ RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.8/ubuntu xenial main' >
        haproxy=${HAPROXY_APP_VERSION} \
     && apt-get clean \
     && sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a \
-    && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
+    && rm -rf /var/lib/apt/lists/* 
 
 # consul-template
 RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
@@ -114,10 +108,6 @@ ADD haproxy_reload.sh  /opt/consul-template/
 ADD consul-template.sh /opt/consul-template/
 ADD consul_config.json /etc/consul.d/
 
-# KEEPALIVED config
-#
-ADD keepalived.conf.ctmpl /opt/consul-template/
-ADD keepalived_reload.sh  /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
@@ -150,51 +140,7 @@ WORKDIR /opt/registrator
 # Providing binaries by us
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz \
-    && rm registrator.tgz
-
-# FABIO
-#
-RUN mkdir /opt/fabio
-ENV PATH ${PATH}:/opt/fabio
-WORKDIR /opt/fabio
-ADD fabio.properties /opt/fabio/fabio.properties
-RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 \
-    && chmod a+x fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 \
-    && ln -s fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 fabio
-
-
-# NETDATA
-#
-RUN apt-get update \
-    && apt-get -y install \
-       zlib1g-dev \
-       gcc \
-       make \
-       autoconf \
-       autogen \
-       automake \
-       pkg-config \
-       uuid-dev \
-       libmnl-dev \
-    && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
-    && cd /tmp/netdata.git \
-    && ./netdata-installer.sh --dont-wait --install /opt \
-    && cd /opt \
-    && rm -rf /tmp/* \
-    && ln -sf /dev/stdout /opt/netdata/var/log/netdata/access.log \
-    && ln -sf /dev/stderr /opt/netdata/var/log/netdata/error.log \
-    && apt-get -y remove \
-       zlib1g-dev \
-       gcc \
-       make \
-       autoconf \
-       autogen \
-       automake \
-       pkg-config \
-       uuid-dev \
-       libmnl-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
+    && rm registrator.tgz \
     && rm -rf /var/lib/apt/lists/*
 
 # PanteraS:

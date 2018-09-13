@@ -18,8 +18,7 @@ _"You shall ~~not~~ PaaS"_
 ### Components
 - Mesos + Marathon + ZooKeeper + Chronos (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
-- Fabio or  
-  HAproxy + consul-template (load balancer with dynamic config generation)
+- HAproxy + consul-template (load balancer with dynamic config generation)
 
 ![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg#)
 
@@ -60,11 +59,6 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
    Mesos Slave    | x | - | x
    Registrator    | x | - | x
    dnsmasq        | x | x | x
-   Fabio          | - | - | -
-   Netdata        | - | - | -
-
-Last two require manual override like `START_FABIO=true`
-Enabling `Fabio` require stop the other concurent service `START_CONSUL_TEMPLATE=false`
 
 
 ## Requirements:
@@ -129,13 +123,12 @@ slavehost-n# docker-compose up -d
 You can reach the PaaS components
 on the following ports:
 
-- HAproxy / Fabio: http://hostname:81
+- HAproxy: http://hostname:81
 - Consul: http://hostname:8500
 - Chronos: http://hostname:4400
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
-- Netdata:  http://hostname:19999 (must run `START_NETDATA=true`)
 
 ## Listening address
 
